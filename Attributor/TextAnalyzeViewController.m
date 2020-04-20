@@ -20,16 +20,51 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+//    _textToAnalyze = [[NSAttributedString alloc] initWithString:@"testing" attributes:@{NSForegroundColorAttributeName: [UIColor greenColor],
+//                                                                                        NSStrokeWidthAttributeName:@-3
+//    }];
+    
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self updateUI];
 }
-*/
+
+// MARK: -
+
+- (void) updateUI {
+    self.colorfulTextLabel.text = [NSString stringWithFormat:@"%lu colorful characters", [[self characterWithAttribute: NSForegroundColorAttributeName] length]];
+    self.outlinedTextLabel.text = [NSString stringWithFormat:@"%lu outlined characters", [[self characterWithAttribute: NSStrokeWidthAttributeName] length]];
+}
+
+// MARK: -
+- (NSAttributedString *)characterWithAttribute: (NSString *)attributeName {
+    NSMutableAttributedString *characters = [[NSMutableAttributedString alloc] init];
+    
+    int index = 0;
+    while (index < [self.textToAnalyze length]) {
+        NSRange range;
+        id value = [self.textToAnalyze attribute:attributeName atIndex:index effectiveRange:&range];
+        if (value) {
+            [characters appendAttributedString:[self.textToAnalyze attributedSubstringFromRange:range]];
+            index += range.length;
+        } else {
+            index++;
+        }
+    }
+    return characters;
+}
+
+
+// MARK: -
+
+- (void)setTextToAnalyze:(NSAttributedString *)textToAnalyze {
+    _textToAnalyze = textToAnalyze;
+    
+    if (self.view.window) [self updateUI]; // in case we're already on show
+}
+
 
 @end

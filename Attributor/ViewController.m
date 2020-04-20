@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "TextAnalyzeViewController.h"
 
 @interface ViewController ()
 
@@ -18,7 +19,9 @@
 
 // MARK:-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@""]) {
+    if ([segue.identifier isEqualToString:@"Analyze Text"]) {
+        TextAnalyzeViewController *destController = (TextAnalyzeViewController *)segue.destinationViewController;
+        destController.textToAnalyze = self.body.textStorage;
     }
 }
 
